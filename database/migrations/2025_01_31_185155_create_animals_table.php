@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date("date_of_birth");
             $table->date("date_of_admisson");
             $table->string("description");
-            $table->string("gender");
+            $table->foreignId("gender_id");
             $table->boolean("adopted")->default(false);            
             $table->string("image")->nullable();
             $table->timestamps();
