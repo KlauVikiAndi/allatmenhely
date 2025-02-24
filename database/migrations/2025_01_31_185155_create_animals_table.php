@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->foreignId("type_id");
+            $table->foreignId("size_id");
             $table->date("date_of_birth");
-            $table->date("date_of_admisson");
+            $table->date("date_of_admission");
             $table->string("description");
             $table->foreignId("gender_id");
             $table->boolean("adopted")->default(false);            

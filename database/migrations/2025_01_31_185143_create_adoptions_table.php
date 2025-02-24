@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId("adopter_id");
             $table->foreignId("animal_id");
-            $table->date("date_of_adoptation");
+            $table->date("date_of_adoption");
             $table->timestamps();
         });
     }

@@ -5,9 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Validation\Rules;
 
-class RegisterRequest extends FormRequest
+class AdopterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,10 +25,10 @@ class RegisterRequest extends FormRequest
     {
         return [
             
-            "name"=>"required|min:3|max:20|unique:users,name",
-            "email"=>"required|email|unique:users,email",
-            "password" => ["required", "min:8", "regex:/[a-z]/", "regex:/[A-Z]/", "regex:/[0-9]/"],
-            "confirm_password"=> "required|same:password"
+            "name"=>"required|min:3|max:20",
+            "e_mail"=>"required|email|unique:adopters,e_mail",
+            "phone_number" => ["required", "min:10", "regex:/^\+?[0-9]{10,15}$/"],
+            "city"=> "required|min:3|max:58"
         ];
     }
 
@@ -40,13 +39,15 @@ class RegisterRequest extends FormRequest
         "name.required"=> "Név elvárt!",
         "name.min"=> "A név túl rövid!",
         "name.max"=> "A név túl hosszú!",
-        "name.unique"=> "A név már létezik!",
-        "email.required"=> "Email cím elvárt!",
-        "email.email"=> "Nem érvényes email forma!",
-        "email.unique"=> "Ezzel az email címmel már regisztráltak!",
-        "password.required"=>"Jelszó elvárt!",
-        "password.regex"=>"Nem megfelelő jelszó!",
-        "confirm_password.same"=>"A két jelszó nem egyezik!"
+        "e_mail.required"=> "Email cím elvárt!",
+        "e_mail.email"=> "Nem érvényes email forma!",
+        "e_mail.unique"=> "Ezzel az email címmel már regisztráltak!",
+        "phone_number.required"=>"Telefonszám elvárt!",
+        "phone_number.min"=>"Túl rövid telefonszám!",
+        "phone_number.regex"=>"Nem megfelelő telefonszám!",
+        "city.required"=> "Településnév elvárt!",
+        "city.min"=> "A településnév túl rövid!",
+        "city.max"=> "A településnév túl hosszú!"
 
        ];
     }

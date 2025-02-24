@@ -4,13 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-
-class Favorite extends Model
+class Appointment extends Model
 {
-    protected $fillable = [
-        'user_id',   // Ezt ADD hozzá!
-        'animal_id', // Ez már valószínűleg benne van
-    ];
+    public $timestamps = false;
+    
     
     public function user()
     {

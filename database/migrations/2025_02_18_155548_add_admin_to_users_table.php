@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('genders', function (Blueprint $table) {
-            $table->id();
-            $table->string ("gender");
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer("admin")->after ("remember_token");
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists("genders");
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

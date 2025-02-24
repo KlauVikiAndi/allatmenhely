@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('genders', function (Blueprint $table) {
+        Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->string ("gender");
+            $table->foreignId("user_id");
+            $table->foreignId("animal_id");
+            $table->dateTime('appointment_time');
+            $table->unique(['animal_id', 'appointment_time']);
             $table->timestamps();
         });
     }
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists("genders");
+        Schema::dropIfExists('appointments');
     }
 };
