@@ -142,15 +142,6 @@ class AnimalController extends ResponseController
         return $animal;
     }
 
-    public function isAdmin(){
-
-        if (Gate::allows("admin")){
-            
-            return "admin";
-        }
-
-        return "nem admin";
-
-    }
+    
 }
 

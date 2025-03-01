@@ -31,14 +31,14 @@ class AdoptionController extends ResponseController
         }
 
         $animal = Animal::where("name", $request->animal_name)
-        ->where("adopted", false) // Csak az adoptálatlan állatokat keressük
+        ->where("adopted", false) // Csak az örökbefogadható állatokat keressük
         ->first();
 
         $adopter = Adopter::where("name", $request->adopter_name)->first();
 
         if (!$animal) 
         {
-            return $this->sendError("Az állat nem található vagy már adoptált!", 404);
+            return $this->sendError("Az állat nem található vagy már örökbefogadták!", 404);
         }
 
         if (!$adopter) 
@@ -76,14 +76,14 @@ class AdoptionController extends ResponseController
             return $this->sendError("Azonosítási hiba!", "Nincs jogosultsága!", 401);
         }
 
-        $adoption = Adoption::find($request->input('id'));
+        $adoption = Adoption::find($request->input("id"));
 
         if (!$adoption) {
             return $this->sendError("Az örökbefogadás nem található!", 404);
         }
     
-        if ($request->has('animal_name')) {
-            // Ha volt már örökbefogadott állat, állítsuk annak az 'adopted' értékét 'false'-ra
+        if ($request->has("animal_name")) {
+            // Ha volt már örökbefogadott állat, állítsuk annak az "adopted" értékét "false"-ra
             $previousAnimal = Animal::find($adoption->animal_id);
             if ($previousAnimal) {
                 $previousAnimal->adopted = false;
@@ -91,9 +91,9 @@ class AdoptionController extends ResponseController
             }
     
             // Új állat keresése
-            $animal = Animal::where('name', $request->animal_name)->where('adopted', false)->first();
+            $animal = Animal::where("name", $request->animal_name)->where("adopted", false)->first();
             if (!$animal) {
-                return $this->sendError("Az állat nem található vagy már örökbefogadott!", 404);
+                return $this->sendError("Az állat nem található vagy már örökbefogadták!", 404);
             }
             // Beállítjuk az új állatot az örökbefogadásban
             $adoption->animal_id = $animal->id;
@@ -102,8 +102,8 @@ class AdoptionController extends ResponseController
         }
     
         // Ha az örökbefogadót módosítjuk
-        if ($request->has('adopter_name')) {
-            $adopter = Adopter::where('name', $request->adopter_name)->first();
+        if ($request->has("adopter_name")) {
+            $adopter = Adopter::where("name", $request->adopter_name)->first();
             if (!$adopter) {
                 return $this->sendError("Az örökbefogadó nem található!", 404);
             }
@@ -111,7 +111,7 @@ class AdoptionController extends ResponseController
         }
     
         // Ha csak az időpontot módosítjuk
-        if ($request->has('date_of_adoption')) {
+        if ($request->has("date_of_adoption")) {
             $adoption->date_of_adoption = $request->date_of_adoption;
         }
     

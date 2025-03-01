@@ -17,16 +17,31 @@ class AppointmentController extends ResponseController
 {
     public function getAppointments()
     {
-        $appointment = Appointment::with("user", "animal")->get();
+        $user = auth("sanctum")->user();
+        $userId = auth()->id();
+        $appointment = Appointment::with("user", "animal")->where("user_id", $userId) ->get();
         
         return $this->sendResponse(AppointmentResource::collection($appointment), "Listázva");
     }
 
-    public function getAppointment(Request $request)
+    public function getAnyAppointments()
     {
-        $appointment = Appointment::where( "id", $request[ "id" ])->first();
+        $user = auth("sanctum")->user();        
+        Gate::before(function ($user) {
+            if ($user->admin == 2) {
 
-        return $this->sendResponse( new AppointmentResource( $appointment ), "Betöltve" );
+                return true;
+            }
+        });
+
+        if (!Gate::allows("admin")) {
+
+            return $this->sendError("Azonosítási hiba!", "Nincs jogosultsága!", 401);
+        }
+
+        $appointment = Appointment::with("user", "animal")->get();
+        
+        return $this->sendResponse(AppointmentResource::collection($appointment), "Listázva");
     }
     
     public function newAppointment(AppointmentRequest $request)
@@ -147,16 +162,7 @@ class AppointmentController extends ResponseController
         ]);
     }
 
-    public function destroyAllAppointment( $id ) 
-    {
-
-        $appointment = Appointment::find( $id );
-
-        $appointment->delete();
-
-        return $appointment;
-    }
-
+    
     public function destroyAnyAppointment( $id ) 
     {
         $user = auth("sanctum")->user();        

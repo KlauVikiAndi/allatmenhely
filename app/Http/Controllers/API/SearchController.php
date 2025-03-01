@@ -1,69 +1,67 @@
 <?php
 
-
 namespace App\Http\Controllers\API;
 
 use App\Models\Animal;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\TypeController;
+use App\Http\Controllers\API\SizeController;
+use App\Http\Controllers\API\GenderController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-
 
 class SearchController extends Controller
 {
-    public function search(Request $request)
+    public function searchAnimals(Request $request)
     {
-        $query = Animal::where("adopted", false); // Csak örökbefogadható állatok
+        $query = Animal::where("adopted", false); // Csak örökbefogadható állatok kereshetők
     
-        // Fajta szűrés a kapcsolt type tábla "type" mezője alapján
-        if ($request->has("type") && $request->input("type") !== "") {
-            $type = $request->input("type");
-            $query->whereHas("type", function ($q) use ($type) {
-                $q->where("type", "like", "%$type%");  // A type mező alapján szűrünk
-            });
+        
+        if ($request->has("type") && $request->type) {
+            $typeController = new TypeController();
+            $type_id = $typeController->getTypeId($request->type); 
+            if ($type_id !== null) {
+                $query->where("type_id", $type_id); 
+            }
         }
     
-        // Nem szűrés a kapcsolt gender tábla "gender" mezője alapján
-        if ($request->has("gender") && $request->input("gender") !== "") {
-            $gender = $request->input("gender");
-            $query->whereHas("gender", function ($q) use ($gender) {
-                $q->where("gender", "like", "%$gender%");
-            });
+        if ($request->has("gender") && $request->gender) {
+            $genderController = new GenderController();
+            $gender_id = $genderController->getGenderId($request->gender); 
+            if ($gender_id !== null) {
+                $query->where("gender_id", $gender_id);
+            }
         }
     
-        // Méret szűrés a kapcsolt size tábla "size" mezője alapján
-        if ($request->has("size") && $request->input("size") !== "") {
-            $size = $request->input("size");
-            $query->whereHas("size", function ($q) use ($size) {
-                $q->where("size", "like", "%$size%");
-            });
+        if ($request->has("size") && $request->size) {
+            $sizeController = new SizeController();
+            $size_id = $sizeController->getSizeId($request->size);
+            if ($size_id !== null) {
+                $query->where("size_id", $size_id); 
+            }
         }
     
-        // Kor szűrés (puppy, adult, senior) a date_of_birth alapján
-        if ($request->has("age") && $request->input("age") !== "") {
-            $age = $request->input("age");
+        if ($request->has("age") && $request->age) {
+            $age = $request->age;
             $now = Carbon::now();
-            $query->where(function ($q) use ($age, $now) {
-                if ($age === "puppy") {
-                    $q->where("date_of_birth", ">=", $now->subMonths(12)->toDateString());
-                } elseif ($age === "adult") {
-                    $q->where("date_of_birth", "<=", $now->subMonths(12)->toDateString())
+    
+            if ($age === "kölyök") {
+                $query->where("date_of_birth", ">=", $now->subMonths(12)->toDateString());
+            } elseif ($age === "felnőtt") {
+                $query->where("date_of_birth", "<=", $now->subMonths(12)->toDateString())
                       ->where("date_of_birth", ">=", $now->subMonths(96)->toDateString());
-                } elseif ($age === "senior") {
-                    $q->where("date_of_birth", "<=", $now->subMonths(96)->toDateString());
-                }
-            });
+            } elseif ($age === "idős") {
+                $query->where("date_of_birth", "<=", $now->subMonths(96)->toDateString());
+            }
         }
     
-        // Eredmény lekérése
         $animals = $query->get();
     
-        // Ha nincs találat, üzenet visszaadása
         if ($animals->isEmpty()) {
             return response()->json(["message" => "Nincs a keresésednek megfelelő állat."], 404);
         }
     
-        // Ha van találat, visszaadjuk az eredményt
         return response()->json($animals);
     }
-}    
+    
+}

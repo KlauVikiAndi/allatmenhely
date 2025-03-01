@@ -22,6 +22,7 @@ Route::middleware("auth:sanctum")->group(function(){
     Route::delete( "/deleteanimal/{id}", [ AnimalController::class, "destroyAnimal" ]);
 
     Route::get("/appointments", [AppointmentController::class, "getAppointments"]);
+    Route::get("/anyappointments", [AppointmentController::class, "getAnyAppointments"]);
     Route::post("/newappointment", [AppointmentController::class, "newAppointment"]);
     Route::put("/updateappointment/{id}", [AppointmentController::class, "updateAppointment"]);
     Route::delete("/deleteappointment/{id}", [AppointmentController::class, "destroyAppointment"]);
@@ -40,16 +41,13 @@ Route::middleware("auth:sanctum")->group(function(){
     Route::get("adoptions", [AdoptionController::class, "getAdoptions"]);
     Route::post("newadoption", [AdoptionController::class, "newAdoption"]);
     Route::put("updateadoption", [AdoptionController::class, "updateAdoption"]);
-    
-    
-    Route::get("/admin", [AnimalController::class, "isAdmin"]);
    
     });
     
     Route::post("/register", [UserController::class, "register"]);
     Route::post("/login", [UserController::class, "login"]);
     
-    Route::get("/search", [SearchController::class, "search"]);
+    Route::get("/search", [SearchController::class, "searchAnimals"]);
     
     Route::get( "/animals", [ AnimalController::class, "getAnimals" ]);
     Route::get( "/animal", [ AnimalController::class, "getAnimal" ]);

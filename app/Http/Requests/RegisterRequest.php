@@ -45,6 +45,7 @@ class RegisterRequest extends FormRequest
         "email.email"=> "Nem érvényes email forma!",
         "email.unique"=> "Ezzel az email címmel már regisztráltak!",
         "password.required"=>"Jelszó elvárt!",
+        "password.min"=> "Túl rövid jelszó!",
         "password.regex"=>"Nem megfelelő jelszó!",
         "confirm_password.same"=>"A két jelszó nem egyezik!"
 
