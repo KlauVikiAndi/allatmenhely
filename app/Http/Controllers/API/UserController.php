@@ -10,23 +10,32 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\API\UserController;
 
 
 class UserController extends ResponseController
 {
-    public function register(RegisterRequest $request){
+    public function register(Request $request)
+{
+    // Validate the data
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed', // The "confirmed" rule expects password_confirmation
+    ]);
 
-        $request->validated();
+    // Create the user
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password), // Make sure to hash the password
+    ]);
 
-        $user = User::create([
-            "name"=>$request ["name"],
-            "email"=>$request ["email"],
-            "password"=>bcrypt ($request ["password"]),
-            "admin"=>$request["admin"]
-        ]);
+    // Return the token as a response
+    return response()->json(['token' => $user->createToken('App Name')->plainTextToken]);
+}
 
-        return $user;
-    }
+
 
     public function login(LoginRequest $request){
 

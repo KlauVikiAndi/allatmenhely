@@ -13,6 +13,9 @@ use App\Http\Controllers\API\AdopterController;
 use App\Http\Controllers\API\AdoptionController;
 use App\Http\Controllers\API\SearchController;
 
+
+Route::post("/register", [UserController::class, "register"]);
+
 Route::middleware("auth:sanctum")->group(function(){
 
     Route::post("/logout", [UserController::class, "logout"]);
@@ -44,7 +47,8 @@ Route::middleware("auth:sanctum")->group(function(){
    
     });
     
-    Route::post("/register", [UserController::class, "register"]);
+  
+    
     Route::post("/login", [UserController::class, "login"]);
     
     Route::get("/search", [SearchController::class, "searchAnimals"]);
