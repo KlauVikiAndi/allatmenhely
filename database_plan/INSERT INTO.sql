@@ -1,6 +1,6 @@
 INSERT INTO types (type) VALUES
-('macska'),
-('kutya')
+('kutya'),
+('macska')
 ;
 
 INSERT INTO sizes (size) VALUES
