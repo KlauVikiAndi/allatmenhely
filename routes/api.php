@@ -15,6 +15,7 @@ use App\Http\Controllers\API\SearchController;
 
 Route::middleware("auth:sanctum")->group(function(){
 
+    Route::post("/admin", [UserController::class, "giveAdmin"]);
     Route::post("/logout", [UserController::class, "logout"]);
    
     Route::post( "/newanimal", [ AnimalController::class, "newAnimal" ]);
@@ -46,7 +47,7 @@ Route::middleware("auth:sanctum")->group(function(){
     
     Route::post("/register", [UserController::class, "register"]);
     Route::post("/login", [UserController::class, "login"]);
-    
+        
     Route::get("/search", [SearchController::class, "searchAnimals"]);
     
     Route::get( "/animals", [ AnimalController::class, "getAnimals" ]);
