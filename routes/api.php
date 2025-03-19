@@ -58,4 +58,4 @@ Route::middleware("auth:sanctum")->group(function(){
 
     Route::get( "/genders", [ GenderController::class, "getGenders"]);
 
-    
+    Route::get( "/sizes", [ SizeController::class, "getSizes"]);
