@@ -33,23 +33,24 @@ class UserController extends ResponseController
     }
     
     public function login(LoginRequest $request){
-
         $request->validated();
-
-        if (Auth::attempt(["name"=>$request["name"], "password"=>$request["password"]])){
-
-        $authUser = Auth::user();
-        $token = $authUser->createToken($authUser->name."token")->plainTextToken;
-        $data = [
-            "name"=> $authUser->name,
-            "token"=> $token
-        ];
-
-        return $this->sendResponse($data, "Sikeres bejelentkezés!");  
-        }
-    }
-
     
+        if (Auth::attempt(["name"=>$request["name"], "password"=>$request["password"]])) {
+            $authUser = Auth::user(); // A bejelentkezett felhasználó
+            $token = $authUser->createToken($authUser->name."token")->plainTextToken;
+    
+            // A megfelelő jogosultságok beállítása
+            $data = [
+                "name"=> $authUser->name,
+                "token"=> $token,
+                "isAdmin" => $authUser->admin,  // Az admin jogosultság lekérése
+            ];
+    
+            return $this->sendResponse($data, "Sikeres bejelentkezés!");  
+        }
+    
+        return $this->sendError("Hibás bejelentkezési adatok!", 401);
+    }
     public function giveAdmin(Request $request)
     {
         if (!Gate::allows("super")) {
