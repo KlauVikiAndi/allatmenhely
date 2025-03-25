@@ -41,7 +41,8 @@ class UserController extends ResponseController
         $token = $authUser->createToken($authUser->name."token")->plainTextToken;
         $data = [
             "name"=> $authUser->name,
-            "token"=> $token
+            "token"=> $token,
+            "isAdmin" => $authUser->admin,  // Az admin jogosultság lekérése
         ];
 
         return $this->sendResponse($data, "Sikeres bejelentkezés!");  
