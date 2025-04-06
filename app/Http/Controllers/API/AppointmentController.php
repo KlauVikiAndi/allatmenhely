@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\MailController;
 use App\Http\Requests\AppointmentRequest;
 use App\Http\Resources\Appointment as AppointmentResource;
 use App\Models\Appointment;
@@ -163,27 +164,29 @@ class AppointmentController extends ResponseController
     }
 
     
-    public function destroyAnyAppointment( $id ) 
+    public function destroyAnyAppointment($id)
     {
-        $user = auth("sanctum")->user();        
+        // Admin jogosultságok ellenőrzése
+        $user = auth("sanctum")->user();
         Gate::before(function ($user) {
             if ($user->admin == 2) {
-
                 return true;
             }
         });
-
+    
         if (!Gate::allows("admin")) {
-
             return $this->sendError("Azonosítási hiba!", "Nincs jogosultsága!", 401);
-
         }
-
-        $appointment = Appointment::find( $id );
-
+    
+        $appointment = Appointment::find($id);
+    
+        $userEmail = $appointment->user->email;  
+    
         $appointment->delete();
-
+    
+        (new MailController)->sendMail($userEmail);  
+    
         return $appointment;
     }
-
+    
 }

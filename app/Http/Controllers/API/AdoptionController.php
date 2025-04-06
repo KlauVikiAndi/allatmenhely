@@ -117,7 +117,7 @@ class AdoptionController extends ResponseController
     
         $adoption->save();
     
-        return $this->sendResponse(new AdoptionResource($adoption->load("animal", "adopter")), "Az örökbefogadás sikeresen rögzítve!");
+        return $this->sendResponse(new AdoptionResource($adoption->load("animal", "adopter")), "Az örökbefogadás sikeresen frissítve!");
     }
 
     public function getAdoptions()

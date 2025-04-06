@@ -12,11 +12,15 @@ use App\Http\Controllers\API\FavoriteController;
 use App\Http\Controllers\API\AdopterController;
 use App\Http\Controllers\API\AdoptionController;
 use App\Http\Controllers\API\SearchController;
+use App\Http\Controllers\MailController;
 
 Route::middleware("auth:sanctum")->group(function(){
 
     Route::post("/admin", [UserController::class, "giveAdmin"]);
     Route::post("/logout", [UserController::class, "logout"]);
+    Route::get("/user", [UserController::class, "getUser"]);
+    Route::get("/users", [UserController::class, "getUsers"]);
+    Route::put("/updateuser", [UserController::class, "updateUser"]);
    
     Route::post( "/newanimal", [ AnimalController::class, "newAnimal" ]);
     Route::put( "/updateanimal", [ AnimalController::class, "updateAnimal" ]);
@@ -60,5 +64,5 @@ Route::middleware("auth:sanctum")->group(function(){
 
     Route::get( "/sizes", [ SizeController::class, "getSizes"]);
 
-
+    Route::get( "/mail", [ MailController::class, "sendMail"]);
     

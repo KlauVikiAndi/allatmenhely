@@ -82,6 +82,72 @@ class UserController extends ResponseController
         
     }
 
+    public function getUser( Request $request){
+
+        $user = auth("sanctum")->user();        
+        Gate::before(function ($user) {
+            if ($user->admin == 2) {
+
+                return true;
+            }
+        });
+
+        if (!Gate::allows("admin")) {
+
+            return $this->sendError("Azonosítási hiba!", "Nincs jogosultsága!", 401);
+        }
+        return User::where("id", $request->id)->first();
+
+    }
+
+
+    public function getUsers(Request $request) {
+
+        $user = auth("sanctum")->user();        
+        Gate::before(function ($user) {
+            if ($user->admin == 2) {
+
+                return true;
+            }
+        });
+
+        if (!Gate::allows("admin")) {
+
+            return $this->sendError("Azonosítási hiba!", "Nincs jogosultsága!", 401);
+        }
+
+        $user = User::all();
+        
+        return $user;
+    }
+    
+    public function updateUser( Request $request ) {
+
+        $user = auth("sanctum")->user();        
+        Gate::before(function ($user) {
+            if ($user->admin == 2) {
+                return true;
+            }
+        });
+
+        if (!Gate::allows("admin")) {
+            return $this->sendError("Azonosítási hiba!", "Nincs jogosultsága!", 401); 
+        }
+
+        $user = $this->getUser($request);
+
+        if (!$user) {
+            return $this->sendError("Felhasználó nem található!", 404);
+        }
+    
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        $user->save();
+
+        return $this->sendResponse(($user), "User adatai frissítve!");
+    }
 }
 
     
